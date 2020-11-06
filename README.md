@@ -1,37 +1,26 @@
-## Welcome to GitHub Pages
+# RTC web demo
 
-You can use the [editor on GitHub](https://github.com/Derek1009/derek1009.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+聚联云提供各种客户端SDK，SDK具有可以灵活搭配的API组合，通过SDK连接全球部署的实时通信网络，为业务提供质量可靠的实时音视频通信服务。
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+本仓库为聚联云web端SDK的示例demo及代码，demo可以[在线体验](https://jocloudsdk.github.io/rtc-web-demo/)。
 
-### Markdown
+接入聚联云web端sdk可参考[快速开始](https://docs.jocloud.com/cloud/cn/product_category/rtc_service/rt_video_interaction/integration_and_start/integration_and_start_web.html)及[API文档](https://docs.jocloud.com/cloud/cn/product_category/rtc_service/rt_video_interaction/api/Web/current/category.html)，也可以参考本仓库代码。
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Demos
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Derek1009/derek1009.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+| 名称 | 简介 | 地址 | 代码 |
+| :--- | :--- | :--- | :--- |
+| basic video call | 实现基础音视频通信 | [在线体验](https://jocloudsdk.github.io/rtc-web-demo/basicVideoCall/index.html) | [代码](./basicVideoCall) |
+| screen share | 屏幕分享 | [在线体验](https://jocloudsdk.github.io/rtc-web-demo/screenShare/index.html) | [代码](./screenShare) |
+| dual stream | 主播发布大小流（两种分辨率的视频），观众可以订阅其中一个 | [在线体验](https://jocloudsdk.github.io/rtc-web-demo/dualStream/index.html) | [代码](./dualStream) |
+| audio mixing | 混音 | [在线体验](https://jocloudsdk.github.io/rtc-web-demo/audioMixing/index.html) | [代码](./audioMixing) |
+| call stat | 通话数据统计 | [在线体验](https://jocloudsdk.github.io/rtc-web-demo/callStat/index.html) | [代码](./callStat) |
+| connection state | 连接状态统计 | [在线体验](https://jocloudsdk.github.io/rtc-web-demo/connectionState/index.html) | [代码](./connectionState) |
+| cross room | 夸频道连麦 | [在线体验](https://jocloudsdk.github.io/rtc-web-demo/crossRoom/index.html) | [代码](./crossRoom) |
+| switch device | 选择及切换设备 | [在线体验](https://jocloudsdk.github.io/rtc-web-demo/switchDevice/index.html) | [代码](./switchDevice) |
+| choose video profile | 选择及切换 video mode | [在线体验](https://jocloudsdk.github.io/rtc-web-demo/videoProfile/index.html) | [代码](./videoProfile) |
+| volume control | 音量控制 | [在线体验](https://jocloudsdk.github.io/rtc-web-demo/volumeControl/index.html) | [代码](./volumeControl) |
+| audience | 观众 | [在线体验](https://jocloudsdk.github.io/rtc-web-demo/audience/index.html) | [代码](./audience) |
+| audio mode | 音频档位 | [在线体验](https://jocloudsdk.github.io/rtc-web-demo/audioMode/index.html) | [代码](./audioMode) |
+| custom source | 自采集音视频轨道 | [在线体验](https://jocloudsdk.github.io/rtc-web-demo/customSource/index.html) | [代码](./customSource) |
+| liveTranscoding | 转码混画 | [在线体验](https://jocloudsdk.github.io/rtc-web-demo/liveTranscoding/index.html) | [代码](./liveTranscoding) |

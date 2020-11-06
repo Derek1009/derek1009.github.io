@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <title>call stat</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../static/index.css">
+    <link rel="stylesheet" href="../static/bootstrap.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <p class="navbar-brand">call stat</p>
+        <ul class="nav navbar-nav">
+            <li><a href="https://docs.jocloud.com/cloud/cn/product_category/rtc_service/rt_video_interaction/advanced_functions/user_experience/transparent_quality/in_call_quality_web.html">guide</a></li>
+            <li><a href="https://github.com/JocloudSDK/rtc-web-demo/tree/master/callStat">source code</a></li>
+            <li><a href="https://docs.jocloud.com/cloud/cn/product_category/rtc_service/rt_video_interaction/api/Web/current/category.html">API</a></li>
+            <li><a href="../index.html">other demos</a></li>
+        </ul>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                <table class="table">
+                    <tbody>
+                    <tr id="uplink-network-score">
+                        <td>uplinkNetworkScore</td>
+                        <td></td>
+                    </tr>
+                    <tr id="sendBitRate">
+                        <td>sendBitRate</td>
+                        <td></td>
+                    </tr>
+                    <tr id="sendBytes">
+                        <td>sendBytes</td>
+                        <td></td>
+                    </tr>
+                    <tr id="uplink-audio">
+                        <td>uplink-audio</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr id="uplink-video">
+                        <td>uplink-video</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                    <tr id="downlink-network-score">
+                        <td>downlinkNetworkScore</td>
+                        <td></td>
+                    </tr>
+                    <tr id="recvBitRate">
+                        <td>recvBitRate</td>
+                        <td></td>
+                    </tr>
+                    <tr id="recvBytes">
+                        <td>recvBytes</td>
+                        <td></td>
+                    </tr>
+                    <tr id="downlink-audio">
+                        <td>downlink-audio</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr id="downlink-video">
+                        <td>downlink-video</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-10">
+                <div class="main">
+                    <div id="message">
+                    </div>
+                    <form id="form" class="form-inline">
+                        <div class="form-group">
+                            <label for="appid">AppId</label>
+                            <input type="text" class="form-control" id="appid" placeholder="appid" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="roomId">room</label>
+                            <input type="text" class="form-control" id="roomId" placeholder="roomid" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="uid">uid</label>
+                            <input type="text" class="form-control" id="uid" placeholder="uid" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="token">token</label>
+                            <input type="text" class="form-control" id="token" placeholder="token(optional)">
+                        </div>
+                        <button type="submit" id="join" class="btn btn-primary">join</button>
+                        <button type="button" id="leave" class="btn btn-default" disabled>leave</button>
+                        <button type="button" id="publish" class="btn btn-default" disabled>publish</button>
+                        <button type="button" id="pull" class="btn btn-default" disabled>pull</button>
+                    </form>
+                    <div>
+                        <a id="invite" target="_blank">invite others</a>
+                    </div>
+                </div>
+                <div id="users"></div>
+            </div>
+        </div>
+    </div>
+    <script src="../static/jquery-3.4.1.min.js"></script>
+    <script src="../static/bootstrap.min.js"></script>
+    <script src="../ThunderBolt-Web-Sdk-2.6.0.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>
