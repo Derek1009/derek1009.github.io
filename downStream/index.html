@@ -22,20 +22,7 @@
         <div class="container">
             <form id="form" class="form-inline">
                 <div class="col-sm-3 col-md-2">
-                    <h4>测试下行用户数据</h4>
-                </div>
-                <div class="col-sm-3 col-md-2">
-                    <select name="index" id="index" class="form-control">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                    </select>
+                    <h4>加入：</h4>
                 </div>
                 <div class="col-sm-3 col-md-2">
                     <input class="form-control" id="appid" type="text" placeholder="AppId" required>
@@ -52,6 +39,37 @@
                 </div>
             </form>
             <div id="tip"></div>
+        </div>
+        <div class="container">
+            
+            <div class="col-sm-3 col-md-2">
+                <h4>订阅：</h4>
+            </div>
+            <form id="formS" class="form-inline">
+                <div class="col-sm-3 col-md-2">
+                    <select name="index" id="index" class="form-control">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 col-md-2">
+                    <input class="form-control" id="SRoomId" type="text" placeholder="SRoomId" required>
+                </div>
+                <div class="col-sm-3 col-md-2">
+                    <input class="form-control" id="SUid" type="text" placeholder="SUid" required>
+                </div>
+                <div class="col-sm-6 col-md-4">
+                    <button type="submit" id="addSubscribe" class="btn btn-primary">addSubscribe</button>
+                    <button type="button" id="removeSubscribe" class="btn btn-default">removeSubscribe</button>
+                </div>
+            </form>
         </div>
     </nav>
     <div class="container-fluid">

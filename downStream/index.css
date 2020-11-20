@@ -54,3 +54,6 @@ select {
     text-align: center;
     line-height: 300px;
 }
+.container {
+    line-height: 50px;
+}

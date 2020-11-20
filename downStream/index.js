@@ -12,59 +12,39 @@ let $form = $("form");
 
 let $join = $('#join');
 let $leave = $('#leave');
-let $tips = $('#tip')
+let $tips = $('#tip');
+let $SRoomId = $('#SRoomId');
+let $SUid = $('#SUid')
 
 $form.submit(async function (e) {
     e.preventDefault();
     await join();
 });
 $index.change(() => {
-    $uid.val('');
+    $SUid.val('');
+    $SRoomId.val('');
 });
 $leave.click(() => {
     leave();
 });
 async function join () {
     try {
-        let index = parseInt($index.val());
+        if (joined) {
+            return;
+        }
         let appId = parseInt($appid.val());
         let roomid = $roomid.val();
         let uid = $uid.val();
         let token = $token.val();
-
-        let flagId = `${appId}:${roomid}:${uid}`;
-
-        let params = {
-            index,
-            appId,
-            roomid,
-            uid,
-            flagId,
-            joined: false,
-            ownerUid: null,
-            webrtc: null,
-            timer: null,
-            hasStream: false
-        }
-        if (rooms.get(flagId)) {
-            if (rooms.get(flagId).joined) {
-                return;
-            }
-        } else {
-            rooms.set(flagId, params);
-        }
 
         if (isNaN(appId)) {
             warn('AppId must be number');
             return;
         }
 
-        if (!validator(params)) return;
-
         webrtc = new WebRTC();
         let err = webrtc.init(appId);
 
-        params.webrtc = webrtc
         if (err === null) {
             console.log('init success');
         } else {
@@ -72,35 +52,22 @@ async function join () {
             return;
         }
         
+        // register event callback
         webrtc.on('remote_stream_add', async (ev, remoteStream) => {
-            if ($(`#view-${index}`).children().is('.no-stream')) {
-                $(`#view-${index}`).find('.no-stream').remove()
-            }
+            // subscribe remote stream
             await webrtc.subscribe(remoteStream);
 
-            params.ownerUid = remoteStream.uid
-            let divId = createUserDiv(index, remoteStream.uid, params);
+            // create div for remote stream
+            
+            let divId = createUserDiv($index.val(), remoteStream);
 
+            // play remote stream
             await webrtc.play(remoteStream.uid, divId);
-
-            params.hasStream = true
-            rooms.set(flagId, params);
         });
 
         webrtc.on('remote_stream_remove', async (ev, remoteStream) => {
-            let flagId = `${appId}:${roomid}:${uid}`;
-            let room = rooms.get(flagId);
-            if (room) {
-                room.webrtc.unsubscribe(remoteStream);
-                removeUserDiv(room.index);
-                rooms.delete(flagId);
-                $(`#view-${index}`).html('<span class="no-stream">主播关闭视频流</span>')
-            }
+            removeUserDiv($index.val());
         });
-
-        params.timer = setInterval(() => {
-            getMediaStat(flagId, index)
-        }, 1000)
 
         if (!token) {
             token = undefined;
@@ -112,12 +79,10 @@ async function join () {
             token: token,
         });
         
-        params.joined = true
-        rooms.set(flagId, params);
+        joined = true;
+        $join.prop('disabled', true);
+        $leave.prop('disabled', false);
 
-        if (!params.hasStream) {
-            $(`#view-${index}`).html('<span class="no-stream">暂无视频流</span>')
-        }
     } catch (e) {
         if (e && e.error) {
             console.warn(e.error);
@@ -133,7 +98,6 @@ async function join () {
 
 function validator (params) {
     let _return = true
-    console.log(888111, rooms, params)
     for (let room of rooms) {
         if (room[1].index === params.index && room[1].webrtc) {
             $tips.html('当前位置已有视图，请选择其他的视图')
@@ -154,29 +118,13 @@ function validator (params) {
 }
 
 function leave () {
-    let index = parseInt($index.val());
-    let appId = parseInt($appid.val());
-    let roomid = $roomid.val();
-    let uid = $uid.val();
-    let flagId = `${appId}:${roomid}:${uid}`;
-
-    let room = rooms.get(flagId)
-    if (!room) return;
-    if (room.index !== index) {
-        $tips.html('当前索引的用户不存在');
-        return
+    if (!joined) {
+        return;
     }
-    console.log(888, room)
-    if (room.roomid !== roomid) {
-        $tips.html('当前房间的用户不存在');
-        return
-    }
-    
-    room.webrtc.leaveRoom();
-    clearInterval(room.timer);
-    rooms.delete(flagId);
-    $tips.html('');
-    removeUserDiv(room.index);
+    webrtc.leaveRoom();
+    joined = false;
+    $join.prop('disabled', false);
+    $leave.prop('disabled', true);
 }
 
 function getMediaStat (flagId, index) {
@@ -185,24 +133,23 @@ function getMediaStat (flagId, index) {
     }
     let _room = rooms.get(flagId)
     let userStat = {};
-    var downlinkAudioStats = _room.webrtc.getDownlinkAudioStats();
-    var downlinkVideoStats = _room.webrtc.getDownlinkVideoStats();
-    var hasAudio = _room.webrtc.hasAudio(_room.ownerUid);
+    var downlinkAudioStats = webrtc.getDownlinkAudioStats();
+    var downlinkVideoStats = webrtc.getDownlinkVideoStats();
+    var hasAudio = webrtc.hasAudio(_room.suid);
     
     let rets = [downlinkAudioStats ,downlinkVideoStats];
-    let ownerid = null
+    let ownerid = _room.suid
     for (let ret of rets) {
         if (ret.result) {
             for (let [uid, t] of ret.result.entries()) {
                 userStat[uid] = Object.assign({}, userStat[uid], t, { hasAudio });
-                ownerid = uid;
             }
         }
     }
     
     if (userStat && userStat[ownerid]) {
         for (var room of rooms) {
-            if (room[1].ownerUid === ownerid) {
+            if (room[1].suid === ownerid) {
                 removeMediaStatDiv(index);
                 createMediaStatDiv(index, userStat[ownerid]);
             }
@@ -213,7 +160,7 @@ function getMediaStat (flagId, index) {
 function createMediaStatDiv (index, stat) {
     let div = $(`#view-${index}`);
     let network = `<img src="../static/img/network_${stat.networkScore}.png" />`
-    let voice = `<img src="../static/img/voice-${stat.audioLevel}.png" />`
+    let voice = `<img src="../static/img/voice-${parseInt(stat.audioLevel / 20)}.png" />`
     let muteVoice = stat.hasAudio
         ? '<img src="../static/img/voice-5.png" />'
         : '<img src="../static/img/voice-enable.png" />'
@@ -240,21 +187,19 @@ function updateNetworkScore (upScore, downScore) {
     console.log(upScore, downScore)
 }
 
-function createUserDiv (index, uid, params) {
+function createUserDiv (index, params) {
     let div = $(`#view-${index}`);
     div.append(`<div class="label label-info" style="position: absolute; left: 0;
     top: 0; z-index: 1;">
         <div>${index}</div>
-        <div>appid: ${params.appId}</div>
-        <div>roomid: ${params.roomid}</div>
-        <div>uid: ${params.uid}</div>
+        <div>RoomId: ${params.roomId}</div>
     </div>`);
     let innerDiv = $("<div style='height: 100%; width: 100%;'></div>");
     div.append(innerDiv);
     let mediaId = 'media-' + index;
     let mediaDiv = $("<div class='media'></div>").attr('id', mediaId);
     innerDiv.append(mediaDiv);
-    let statDiv = $(`<div id='stat-${uid}' class='label label-info' style='position: absolute; left: 0; bottom: 0; z-index: 1;'>主播uid：${uid}</div>`);
+    let statDiv = $(`<div id='stat-${params.uid}' class='label label-info' style='position: absolute; left: 0; bottom: 0; z-index: 1;'>主播uid：${params.uid}</div>`);
     innerDiv.append(statDiv);
     return mediaId;
 }
@@ -271,4 +216,62 @@ function getDownVolumeScore (room) {
         return Number(rets.result.get(room.ownerUid).audioLevel)
     }
     return 0
+}
+
+$('#addSubscribe').click(() => {
+    addSubscribe();
+});
+function addSubscribe () {
+    let index = parseInt($index.val());
+    let sroom = $SRoomId.val();
+    let suid = $SUid.val();
+
+    let flag = `${index}:${sroom}:${suid}`;
+    let params = {
+        index,
+        sroom,
+        suid,
+        timer: null
+    };
+    if (rooms.get(flag)) {
+        return console.warn('You alerady addSubscribe');
+    }
+    if (webrtc) {
+        let err = webrtc.addSubscribe(sroom, suid);
+        if (err) {
+            console.warn(err.error);
+        }
+        rooms.set(flag, params);
+        params.timer = setInterval(() => {
+            getMediaStat(flag, index)
+        }, 1000)
+        
+    } else {
+        console.warn('create WebRTC first');
+    }
+}
+
+$('#removeSubscribe').click(() => {
+    removeSubscribe();
+});
+function removeSubscribe () {
+    let index = parseInt($index.val());
+    let sroom = $SRoomId.val();
+    let suid = $SUid.val();
+
+    let flag = `${index}:${sroom}:${suid}`;
+    if (rooms.get(flag)) {
+        if (webrtc) {
+            let err = webrtc.removeSubscribe(sroom, suid);
+            clearInterval(rooms.get(flag).timer);
+            rooms.delete(flag);
+            if (err) {
+                console.warn(err.error);
+            }
+        } else {
+            console.warn('create WebRTC first');
+        }
+    } else {
+        console.warn('You are not subscribe some stream');
+    }
 }
